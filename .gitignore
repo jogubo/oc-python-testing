@@ -2,6 +2,11 @@ bin
 include
 lib
 .Python
-tests/
 .envrc
+.venv/
 __pycache__
+
+tests/
+.pytest_cache
+
+.DS_Store
