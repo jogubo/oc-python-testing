@@ -29,12 +29,12 @@ def competitions():
         {
             "name": "Test Competition 1",
             "date": "2020-03-27 10:00:00",
-            "numberOfPlaces": "25"
+            "places": "25"
         },
         {
             "name": "Test Competition 2",
             "date": "2020-10-22 13:30:00",
-            "numberOfPlaces": "10"
+            "places": "10"
         }
     ]
 
