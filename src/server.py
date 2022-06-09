@@ -2,6 +2,10 @@ import json
 from flask import Flask, render_template, request, redirect, flash, url_for
 
 
+MAX_BOOK = 12
+PLACE_COST = 1
+
+
 def load_clubs():
     with open('clubs.json') as c:
         list_of_clubs = json.load(c)['clubs']
@@ -40,7 +44,6 @@ def show_summary():
         return redirect(url_for('index'))
 
 
-
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
     found_club = [c for c in clubs if c['name'] == club][0]
@@ -57,9 +60,19 @@ def purchase_places():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     places_required = int(request.form['places'])
-    competition['places'] = int(competition['places'])-places_required
-    flash('Great-booking complete!')
-    return render_template('welcome.html', club=club, competitions=competitions)
+    place_allowed = int(club['points']) // PLACE_COST
+    if places_required > place_allowed:
+        flash('You do not have enough points')
+        return render_template(
+            'booking.html',
+            club=club,
+            competition=competition
+        )
+    else:
+        club['points'] = place_allowed - places_required * PLACE_COST
+        competition['places'] = int(competition['places']) - places_required
+        flash('Great-booking complete!')
+        return render_template('welcome.html', club=club, competitions=competitions)
 
 
 # TODO: Add route for points display
