@@ -68,6 +68,16 @@ def purchase_places():
             club=club,
             competition=competition
         )
+    elif places_required > MAX_BOOK:
+        flash(
+            f"You cannot purchase more than {MAX_BOOK} "
+            f"{'place' if MAX_BOOK <= 1 else 'places'}"
+        )
+        return render_template(
+            'booking.html',
+            club=club,
+            competition=competition
+        )
     else:
         club['points'] = place_allowed - places_required * PLACE_COST
         competition['places'] = int(competition['places']) - places_required
