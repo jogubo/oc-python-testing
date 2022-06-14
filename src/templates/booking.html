@@ -15,7 +15,9 @@
            </ul>
         {% endif %}
     {% endwith %}
-    Places available: {{ competition['places'] }}
+
+    <p>Points available: {{ club['points'] }}</p>
+    <p>Places available: {{ competition['places'] }}</p>
 
     <form action="/purchase-places" method="post">
         <input type="hidden" name="club" value="{{ club['name'] }}">

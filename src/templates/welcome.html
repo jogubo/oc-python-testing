@@ -28,11 +28,14 @@
                 {{ comp['name'] }}<br />
                 Date: {{ comp['date'] }}</br>
                 Number of Places: {{ comp['places'] }}
-                {% if comp['places']|int > 0 and comp['date'] > current_datetime %}
-                    <a href="{{ url_for('book', competition=comp['name'], club=club['name']) }}">Book Places</a>
+                {% if comp['places']|int <= 0 %}
+                    </br>
+                    No more places available
                 {% elif comp['date'] < current_datetime %}
                     </br>
                     Competition over
+                {% else  %}
+                    <a href="{{ url_for('book', competition=comp['name'], club=club['name']) }}">Book Places</a>
                 {% endif %}
             </li>
             <hr />

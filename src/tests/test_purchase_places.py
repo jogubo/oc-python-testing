@@ -12,6 +12,23 @@ def test_purchase_places_with_valid_data(mocker, client,  clubs, competitions):
     assert 'Competition over' not in response.data.decode()
 
 
+def test_purchase_more_places_than_available(
+    mocker, client, clubs, competitions
+):
+    for competition in competitions:
+        competition['places'] = "1"
+    mocker.patch('server.clubs', clubs)
+    mocker.patch('server.competitions', competitions)
+    data = {
+        'club': clubs[0]['name'],
+        'competition': competitions[0]['name'],
+        'places': f"{int(competitions[0]['places']) + 1}",
+    }
+    response = client.post('purchase-places', data=data)
+    assert response.status_code == 200
+    assert 'Not enough places available' in response.data.decode()
+
+
 def test_purchase_places_with_more_points_than_available(
     mocker, client, clubs, competitions
 ):
@@ -57,6 +74,30 @@ def test_purchase_places_over_date_limit(mocker, client,  clubs, competitions):
     assert response.status_code == 200
     assert 'Great-booking complete!' not in response.data.decode()
     assert 'Competition over' in response.data.decode()
+
+
+def test_link_to_purchase_page(
+    mocker, client,  clubs, competitions
+):
+    for competition in competitions:
+        competition['places'] = f"{int(clubs[0]['points']) + 5}"
+    mocker.patch('server.clubs', clubs)
+    mocker.patch('server.competitions', competitions)
+    response = client.post('show-summary', data=clubs[0])
+    assert response.status_code == 200
+    assert 'Book Places' in response.data.decode()
+
+
+def test_no_link_to_purchase_page_if_no_more_places_available(
+    mocker, client,  clubs, competitions
+):
+    for competition in competitions:
+        competition['places'] = "0"
+    mocker.patch('server.clubs', clubs)
+    mocker.patch('server.competitions', competitions)
+    response = client.post('show-summary', data=clubs[0])
+    assert response.status_code == 200
+    assert 'No more places available' in response.data.decode()
 
 
 def test_no_link_to_purchase_page_of_past_competition(
