@@ -1,6 +1,6 @@
 import pytest
-
 import server
+from datetime import date
 
 
 @pytest.fixture
@@ -19,29 +19,21 @@ def clubs():
 
 
 @pytest.fixture
-def club(clubs):
-    return clubs[0]
-
-
-@pytest.fixture
 def competitions():
+    current_date = f"{date.today()}".split('-')
+    year = int(current_date[0]) + 1
     return [
         {
             "name": "Test Competition 1",
-            "date": "2020-03-27 10:00:00",
+            "date": f"{year}-03-27 10:00:00",
             "places": "25"
         },
         {
             "name": "Test Competition 2",
-            "date": "2020-10-22 13:30:00",
+            "date": f"{year}-10-22 13:30:00",
             "places": "10"
         }
     ]
-
-
-@pytest.fixture
-def competition(competitions):
-    return competitions[0]
 
 
 @pytest.fixture

@@ -1,6 +1,6 @@
-def test_with_know_email(mocker, client, clubs, club):
+def test_with_know_email(mocker, client, clubs):
     mocker.patch('server.clubs', clubs)
-    response = client.post('show-summary', data=club)
+    response = client.post('show-summary', data=clubs[0])
     assert response.status_code == 200
 
 

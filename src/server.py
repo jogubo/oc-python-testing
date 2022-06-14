@@ -1,6 +1,8 @@
 import json
 from flask import Flask, render_template, request, redirect, flash, url_for
 
+from datetime import datetime
+
 
 MAX_BOOK = 12
 PLACE_COST = 1
@@ -34,14 +36,15 @@ def index():
 def show_summary():
     try:
         club = [c for c in clubs if c['email'] == request.form['email']][0]
-        return render_template(
-            'welcome.html',
-            club=club,
-            competitions=competitions
-         )
     except IndexError:
         flash('email was not found.')
         return redirect(url_for('index'))
+    return render_template(
+        'welcome.html',
+        club=club,
+        competitions=competitions,
+        current_datetime=f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+     )
 
 
 @app.route('/book/<competition>/<club>')
@@ -61,8 +64,16 @@ def purchase_places():
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     places_required = int(request.form['places'])
     place_allowed = int(club['points']) // PLACE_COST
+    current_datetime = f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     if places_required > place_allowed:
         flash('You do not have enough points')
+        return render_template(
+            'booking.html',
+            club=club,
+            competition=competition
+        )
+    elif current_datetime > competition['date']:
+        flash('Competition over')
         return render_template(
             'booking.html',
             club=club,
@@ -82,7 +93,12 @@ def purchase_places():
         club['points'] = place_allowed - places_required * PLACE_COST
         competition['places'] = int(competition['places']) - places_required
         flash('Great-booking complete!')
-        return render_template('welcome.html', club=club, competitions=competitions)
+        return render_template(
+            'welcome.html',
+            club=club,
+            competitions=competitions,
+            current_datetime=f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        )
 
 
 # TODO: Add route for points display

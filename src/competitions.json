@@ -9,6 +9,11 @@
             "name": "Fall Classic",
             "date": "2020-10-22 13:30:00",
             "places": "13"
+        },
+        {
+            "name": "Back to the Future",
+            "date": "2023-11-03 14:00:00",
+            "places": "10"
         }
     ]
 }
