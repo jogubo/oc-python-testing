@@ -25,7 +25,7 @@
     <ul>
         {% for comp in competitions %}
             <li>
-                {{ comp['name'] }}<br />
+                {{ comp['name'] }}<br/>
                 Date: {{ comp['date'] }}</br>
                 Number of Places: {{ comp['places'] }}
                 {% if comp['places']|int <= 0 %}
@@ -41,6 +41,8 @@
             <hr />
             {% endfor %}
     </ul>
+
+    <p><a href="{{ url_for('points_board') }}">Points board</a></p>
 
 </body>
 </html>

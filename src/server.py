@@ -16,8 +16,8 @@ def load_clubs():
 
 def loadCompetitions():
     with open('competitions.json') as comps:
-        listOfCompetitions = json.load(comps)['competitions']
-        return listOfCompetitions
+        list_of_competitions = json.load(comps)['competitions']
+        return list_of_competitions
 
 
 app = Flask(__name__)
@@ -45,6 +45,11 @@ def show_summary():
         competitions=competitions,
         current_datetime=f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
      )
+
+
+@app.route('/points-board')
+def points_board():
+    return render_template('clubs.html', clubs=clubs)
 
 
 @app.route('/book/<competition>/<club>')

@@ -1,9 +1,19 @@
 {
     "competitions": [
         {
+            "name": "TM Cup",
+            "date": "2024-06-02 18:00:00",
+            "places": "17"
+        },
+        {
             "name": "Spring Festival",
             "date": "2020-03-27 10:00:00",
             "places": "25"
+        },
+        {
+            "name": "The Two Towers",
+            "date": "2025-10-22 21:00:00",
+            "places": "0"
         },
         {
             "name": "Fall Classic",

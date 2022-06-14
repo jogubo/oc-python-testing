@@ -1,0 +1,25 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clubs | GUDLFT Registration</title>
+</head>
+<body>
+    <h2>Clubs | Points board</h2>
+
+    <ul>
+        {% for club in clubs %}
+            <li>
+                <strong>{{ club['name'] }}</strong><br>
+                Points: {{ club['points'] }}<br>
+            </li>
+            <hr>
+            {% endfor %}
+    </ul>
+
+    <form>
+        <input type="button" value="Go back" onclick="history.back()">
+    </form>
+
+</body>
+</html>
