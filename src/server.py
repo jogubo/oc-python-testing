@@ -47,17 +47,11 @@ def show_summary():
      )
 
 
-@app.route('/points-board')
-def points_board():
-    return render_template('clubs.html', clubs=clubs)
-
-
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
     found_club = [c for c in clubs if c['name'] == club][0]
-    found_competition = [
-        c for c in competitions if c['name'] == competition
-    ][0]
+    found_competition = [c for c in competitions if c['name'] == competition]
+    found_competition = found_competition[0]
     if found_club and found_competition:
         return render_template(
             'booking.html',
@@ -77,41 +71,22 @@ def book(competition, club):
 def purchase_places():
     competition = [
         c for c in competitions if c['name'] == request.form['competition']
-    ][0]
+    ]
+    competition = competition[0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     places_required = int(request.form['places'])
     places_allowed = int(club['points']) // PLACE_COST
     current_datetime = f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     if places_required > places_allowed:
         flash('You do not have enough points')
-        return render_template(
-            'booking.html',
-            club=club,
-            competition=competition
-        )
     elif places_required > int(competition['places']):
         flash('Not enough places available')
-        return render_template(
-            'booking.html',
-            club=club,
-            competition=competition
-        )
     elif current_datetime > competition['date']:
         flash('Competition over')
-        return render_template(
-            'booking.html',
-            club=club,
-            competition=competition
-        )
     elif places_required > MAX_BOOK:
         flash(
             f"You cannot purchase more than {MAX_BOOK} "
             f"{'place' if MAX_BOOK <= 1 else 'places'}"
-        )
-        return render_template(
-            'booking.html',
-            club=club,
-            competition=competition
         )
     else:
         club['points'] = places_allowed - places_required * PLACE_COST
@@ -123,9 +98,17 @@ def purchase_places():
             competitions=competitions,
             current_datetime=f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         )
+    return render_template(
+        'booking.html',
+        club=club,
+        competition=competition
+    )
 
 
-# TODO: Add route for points display
+@app.route('/points-board')
+def points_board():
+    return render_template('clubs.html', clubs=clubs)
+
 
 @app.route('/logout')
 def logout():
