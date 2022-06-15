@@ -8,14 +8,14 @@ MAX_BOOK = 12
 PLACE_COST = 1
 
 
-def load_clubs():
-    with open('clubs.json') as c:
+def load_clubs(json_file='clubs.json'):
+    with open(json_file) as c:
         list_of_clubs = json.load(c)['clubs']
         return list_of_clubs
 
 
-def loadCompetitions():
-    with open('competitions.json') as comps:
+def load_competitions(json_file='competitions.json'):
+    with open(json_file) as comps:
         list_of_competitions = json.load(comps)['competitions']
         return list_of_competitions
 
@@ -23,7 +23,7 @@ def loadCompetitions():
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
-competitions = loadCompetitions()
+competitions = load_competitions()
 clubs = load_clubs()
 
 
@@ -49,34 +49,34 @@ def show_summary():
 
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
-    found_club = [c for c in clubs if c['name'] == club][0]
-    found_competition = [c for c in competitions if c['name'] == competition]
-    found_competition = found_competition[0]
-    if found_club and found_competition:
+    try:
+        found_club = [c for c in clubs if c['name'] == club][0]
+        found_compet = [c for c in competitions if c['name'] == competition]
+        found_compet = found_compet[0]
         return render_template(
             'booking.html',
             club=found_club,
-            competition=found_competition
+            competition=found_compet
         )
-    else:
+    except IndexError:
         flash("Something went wrong-please try again")
-        return render_template(
-            'welcome.html',
-            club=club,
-            competitions=competitions
-        )
+        return redirect(url_for('show_summary'))
 
 
 @app.route('/purchase-places', methods=['POST'])
 def purchase_places():
-    competition = [
-        c for c in competitions if c['name'] == request.form['competition']
-    ]
-    competition = competition[0]
-    club = [c for c in clubs if c['name'] == request.form['club']][0]
-    places_required = int(request.form['places'])
-    places_allowed = int(club['points']) // PLACE_COST
-    current_datetime = f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    try:
+        competition = [
+            c for c in competitions if c['name'] == request.form['competition']
+        ]
+        competition = competition[0]
+        club = [c for c in clubs if c['name'] == request.form['club']][0]
+        places_required = int(request.form['places'])
+        places_allowed = int(club['points']) // PLACE_COST
+        current_datetime = f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    except IndexError:
+        flash("Something went wrong-please try again")
+        return redirect(url_for('show_summary'))
     if places_required > places_allowed:
         flash('You do not have enough points')
     elif places_required > int(competition['places']):
