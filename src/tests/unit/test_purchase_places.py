@@ -1,4 +1,4 @@
-def test_get_purchase_page_with_valid_url(
+def test_get_purchase_page_with_valid_arguments(
     mocker, client, clubs, competitions
 ):
     mocker.patch('server.clubs', clubs)
@@ -7,7 +7,7 @@ def test_get_purchase_page_with_valid_url(
     assert response.status_code == 200
 
 
-def test_get_purchase_page_with_invalid_url(
+def test_get_purchase_page_with_invalid_arguments(
     mocker, client, clubs, competitions
 ):
     mocker.patch('server.clubs', clubs)
