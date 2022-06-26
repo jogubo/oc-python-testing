@@ -21,6 +21,12 @@
     {% endwith %}
 
     <p>Points available: {{ club['points'] }}</p>
+    <p>Place cost: {{ place_cost }} 
+    {% if place_cost|int <= 1 %}
+        point
+    {% else %}
+        points
+    {% endif %}</p>
 
     <h3>Competitions:</h3>
     <ul>

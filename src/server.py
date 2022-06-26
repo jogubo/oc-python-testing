@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 MAX_BOOK = 12
-PLACE_COST = 1
+PLACE_COST = 3
 
 
 def load_clubs(json_file='clubs.json'):
@@ -43,6 +43,7 @@ def show_summary():
         'welcome.html',
         club=club,
         competitions=competitions,
+        place_cost=PLACE_COST,
         current_datetime=f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
      )
 
@@ -56,7 +57,8 @@ def book(competition, club):
         return render_template(
             'booking.html',
             club=found_club,
-            competition=found_compet
+            competition=found_compet,
+            place_cost=PLACE_COST,
         )
     except IndexError:
         flash("Something went wrong-please try again")
@@ -72,12 +74,12 @@ def purchase_places():
         competition = competition[0]
         club = [c for c in clubs if c['name'] == request.form['club']][0]
         places_required = int(request.form['places'])
-        places_allowed = int(club['points']) // PLACE_COST
+        places_allowed = int(club['points'])
         current_datetime = f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     except IndexError:
         flash("Something went wrong-please try again")
         return redirect(url_for('show_summary'))
-    if places_required > places_allowed:
+    if places_required > places_allowed // PLACE_COST:
         flash('You do not have enough points')
     elif places_required > int(competition['places']):
         flash('Not enough places available')
@@ -96,12 +98,14 @@ def purchase_places():
             'welcome.html',
             club=club,
             competitions=competitions,
+            place_cost=PLACE_COST,
             current_datetime=f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         )
     return render_template(
         'booking.html',
         club=club,
-        competition=competition
+        competition=competition,
+        place_cost=PLACE_COST,
     )
 
 

@@ -18,6 +18,12 @@
     {% endwith %}
 
     <p>Points available: {{ club['points'] }}</p>
+    <p>Place cost: {{ place_cost }} 
+    {% if place_cost|int <= 1 %}
+        point
+    {% else %}
+        points
+    {% endif %}</p>
     <p>Places available: {{ competition['places'] }}</p>
 
     <form action="/purchase-places" method="post">
